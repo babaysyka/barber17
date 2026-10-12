@@ -72,13 +72,17 @@ export function readSession(token: string, now = Date.now()) {
 }
 
 export function sessionCookie(token: string, clear = false) {
+  const onVercel = process.env.VERCEL === "1";
   return [
     `${COOKIE}=${clear ? "" : token}`,
     "HttpOnly",
     "Path=/",
-    "SameSite=Lax",
+    onVercel ? "SameSite=None" : "SameSite=Lax",
+    onVercel ? "Secure" : "",
     clear ? "Max-Age=0" : "Max-Age=604800",
-  ].join("; ");
+  ]
+    .filter(Boolean)
+    .join("; ");
 }
 
 function cookieValue(header: string | undefined) {

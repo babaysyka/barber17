@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { scryptSync } from "node:crypto";
 import test from "node:test";
-import { assertLoginAllowed, hashPassword, readSession, resetLoginAttempts, signSession, verifyPassword } from "./admin-auth.js";
+import { assertLoginAllowed, hashPassword, readSession, resetLoginAttempts, sessionCookie, signSession, verifyPassword } from "./admin-auth.js";
 
 test("argon2 hash verifies and the seeded scrypt hash still matches", async () => {
   const stored = await hashPassword("orda-local");
@@ -19,6 +19,19 @@ test("session cookie payload rejects a tampered signature", () => {
   const [payload] = token.split(".");
   assert.equal(readSession(`${payload}.tampered`, 1_700_000_000_000), null);
   assert.equal(readSession(token, 1_700_000_000_000 + 8 * 86400000), null);
+});
+
+test("the admin cookie is sent across Vercel sites", () => {
+  const previous = process.env.VERCEL;
+  delete process.env.VERCEL;
+  assert.match(sessionCookie("token"), /SameSite=Lax/);
+  assert.doesNotMatch(sessionCookie("token"), /Secure/);
+  process.env.VERCEL = "1";
+  const secure = sessionCookie("token");
+  assert.match(secure, /SameSite=None/);
+  assert.match(secure, /Secure/);
+  if (previous === undefined) delete process.env.VERCEL;
+  else process.env.VERCEL = previous;
 });
 
 test("login rate limit stops after eight attempts", () => {

@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "prisma generate --schema=../../prisma/schema.prisma && tsc",
+    "postinstall": "prisma generate --schema=../../prisma/schema.prisma",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test src/slots.test.ts src/telegram.test.ts src/telegram-bot.test.ts src/reminders.test.ts src/booking.race.test.ts src/admin-auth.test.ts src/analytics.test.ts"
@@ -16,6 +17,7 @@
     "dotenv": "^17.2.3",
     "fastify": "^5.6.2",
     "grammy": "^1.46.0",
+    "prisma": "^6.19.3",
     "hash-wasm": "^4.12.0",
     "zod": "^4.1.12"
   },
