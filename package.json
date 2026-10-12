@@ -1,0 +1,30 @@
+{
+  "name": "barbershop",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n api,web,mini -c cyan,magenta,yellow \"npm run dev -w @barbershop/api\" \"npm run dev -w @barbershop/web\" \"npm run dev -w @barbershop/miniapp\"",
+    "dev:web": "npm run dev -w @barbershop/web --",
+    "dev:api": "npm run dev -w @barbershop/api",
+    "dev:miniapp": "npm run dev -w @barbershop/miniapp",
+    "build": "npm run build -w @barbershop/web && npm run build -w @barbershop/miniapp",
+    "lint": "npm run lint -w @barbershop/web",
+    "db:up": "docker compose up -d",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:reset": "prisma migrate reset --force"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "prisma": "^6.19.3",
+    "tsx": "^4.23.15"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3"
+  }
+}

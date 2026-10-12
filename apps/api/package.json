@@ -1,0 +1,27 @@
+{
+  "name": "@barbershop/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test src/slots.test.ts src/telegram.test.ts src/telegram-bot.test.ts src/reminders.test.ts src/booking.race.test.ts src/admin-auth.test.ts src/analytics.test.ts"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.1.0",
+    "@fastify/multipart": "^10.1.3",
+    "@prisma/client": "^6.19.3",
+    "dotenv": "^17.2.3",
+    "fastify": "^5.6.2",
+    "grammy": "^1.46.0",
+    "hash-wasm": "^4.12.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}

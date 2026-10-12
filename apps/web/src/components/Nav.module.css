@@ -1,0 +1,106 @@
+.header {
+  position: fixed;
+  z-index: 40;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: var(--header);
+  padding: 1.1rem 1.25rem;
+  background: transparent;
+  transition: background-color 350ms var(--ease), padding 350ms var(--ease);
+}
+
+.compact {
+  background: rgba(11, 11, 10, 0.94);
+  padding-block: 0.65rem;
+}
+
+.logo {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.desktop {
+  display: none;
+}
+
+.menuButton {
+  position: relative;
+  z-index: 2;
+  min-height: 44px;
+  padding: 0 0.2rem;
+  border: 0;
+  background: none;
+  color: var(--fg);
+  font: 500 0.72rem/1 var(--font-sans), sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  background: var(--bg);
+  padding: 2rem 1.25rem 2.5rem;
+}
+
+.overlay nav {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.overlay a {
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.4rem, 12vw, 4rem);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.overlay a:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+@media (min-width: 900px) {
+  .header {
+    padding-inline: 2.5rem;
+  }
+
+  .menuButton,
+  .overlay {
+    display: none;
+  }
+
+  .desktop {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .desktop a {
+    text-decoration: none;
+  }
+
+  .desktop a:not(:global(.cta)) {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+}

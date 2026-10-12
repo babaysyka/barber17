@@ -1,0 +1,41 @@
+.footer {
+  padding: 4rem 1.25rem 3rem;
+  border-top: 1px solid var(--line);
+}
+
+.name {
+  margin: 0 0 2rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.grid p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.grid a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--fg);
+}
+
+@media (min-width: 800px) {
+  .footer {
+    padding: 4.5rem 4rem 3.5rem;
+  }
+
+  .grid {
+    grid-template-columns: 1.2fr 1fr 1fr auto;
+    align-items: start;
+    gap: 2rem;
+  }
+}

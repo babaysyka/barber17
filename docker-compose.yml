@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16
+    container_name: orda-postgres
+    ports:
+      - "54322:5432"
+    environment:
+      POSTGRES_USER: orda
+      POSTGRES_PASSWORD: orda
+      POSTGRES_DB: orda
+      TZ: UTC
+      PGTZ: UTC
+    volumes:
+      - orda_pg:/var/lib/postgresql/data
+
+volumes:
+  orda_pg:

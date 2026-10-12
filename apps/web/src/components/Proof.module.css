@@ -1,0 +1,55 @@
+.section {
+  display: grid;
+  gap: 2rem;
+  padding: 6rem 1.25rem;
+}
+
+.quote {
+  margin: 0;
+}
+
+.quote blockquote,
+.quote p {
+  margin: 0;
+}
+
+.quote p {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 3.3rem);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.quote figcaption {
+  margin-top: 1.25rem;
+  color: var(--muted);
+}
+
+.shots {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.7rem;
+  align-self: end;
+  min-width: 0;
+}
+
+.shots figure {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: clip;
+  background: var(--bg-2);
+}
+
+.shots :global(img) {
+  object-fit: cover;
+}
+
+@media (min-width: 900px) {
+  .section {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    align-items: end;
+    gap: 4rem;
+    padding: 8rem 4rem;
+  }
+}

@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// Weekday is ISO: 1 = Monday … 7 = Sunday.
+model Barber {
+  id              String  @id
+  name            String
+  photoUrl        String? @map("photo_url")
+  bio             String?
+  experienceYears Int     @map("experience_years")
+  telegramChatId  String? @map("telegram_chat_id")
+  isActive        Boolean @default(true) @map("is_active")
+  sortOrder       Int     @default(0) @map("sort_order")
+
+  portfolio BarberPortfolio[]
+  services  BarberService[]
+  hours     WorkingHour[]
+  breaks    Break[]
+  timeOff   TimeOff[]
+  bookings  Booking[]
+  reviews   Review[]
+
+  @@map("barbers")
+}
+
+model BarberPortfolio {
+  id        String @id @default(uuid()) @db.Uuid
+  barberId  String @map("barber_id")
+  imageUrl  String @map("image_url")
+  sortOrder Int    @default(0) @map("sort_order")
+
+  barber Barber @relation(fields: [barberId], references: [id], onDelete: Cascade)
+
+  @@map("portfolio_items")
+}
+
+model Service {
+  id          String  @id
+  name        String
+  description String
+  durationMin Int     @map("duration_min")
+  price       Int
+  isActive    Boolean @default(true) @map("is_active")
+  sortOrder   Int     @default(0) @map("sort_order")
+
+  barbers         BarberService[]
+  bookingServices BookingService[]
+
+  @@map("services")
+}
+
+model BarberService {
+  barberId    String  @map("barber_id")
+  serviceId   String  @map("service_id")
+  durationMin Int?    @map("duration_min")
+  price       Int?
+  isEnabled   Boolean @default(true) @map("is_enabled")
+
+  barber  Barber  @relation(fields: [barberId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([barberId, serviceId])
+  @@map("barber_services")
+}
+
+model WorkingHour {
+  id        String   @id @default(uuid()) @db.Uuid
+  barberId  String   @map("barber_id")
+  weekday   Int
+  startTime DateTime @map("start_time") @db.Time(0)
+  endTime   DateTime @map("end_time") @db.Time(0)
+
+  barber Barber @relation(fields: [barberId], references: [id], onDelete: Cascade)
+
+  @@map("working_hours")
+}
+
+model Break {
+  id        String   @id @default(uuid()) @db.Uuid
+  barberId  String   @map("barber_id")
+  weekday   Int
+  startTime DateTime @map("start_time") @db.Time(0)
+  endTime   DateTime @map("end_time") @db.Time(0)
+
+  barber Barber @relation(fields: [barberId], references: [id], onDelete: Cascade)
+
+  @@map("breaks")
+}
+
+model TimeOff {
+  id       String   @id @default(uuid()) @db.Uuid
+  barberId String?  @map("barber_id")
+  startsAt DateTime @map("starts_at") @db.Timestamptz(6)
+  endsAt   DateTime @map("ends_at") @db.Timestamptz(6)
+  type     String
+  note     String?
+
+  barber Barber? @relation(fields: [barberId], references: [id], onDelete: SetNull)
+
+  @@map("time_off")
+}
+
+model Client {
+  id             String   @id @default(uuid()) @db.Uuid
+  name           String
+  phone          String
+  telegramId     String?  @unique @map("telegram_id")
+  telegramChatId String?  @map("telegram_chat_id")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  bookings Booking[]
+  reviews  Review[]
+
+  @@index([phone])
+  @@map("clients")
+}
+
+enum BookingStatus {
+  confirmed
+  completed
+  cancelled
+  no_show
+}
+
+enum BookingSource {
+  web
+  telegram
+  admin
+}
+
+model Booking {
+  id               String        @id @default(uuid()) @db.Uuid
+  clientId         String        @map("client_id") @db.Uuid
+  barberId         String        @map("barber_id")
+  startsAt         DateTime      @map("starts_at") @db.Timestamptz(6)
+  endsAt           DateTime      @map("ends_at") @db.Timestamptz(6)
+  totalPrice       Int           @map("total_price")
+  totalDurationMin Int           @map("total_duration_min")
+  status           BookingStatus @default(confirmed)
+  source           BookingSource
+  manageToken      String        @unique @default(uuid()) @map("manage_token") @db.Uuid
+  createdAt        DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  reminderDaySentAt DateTime? @map("reminder_day_sent_at") @db.Timestamptz(6)
+  reminder30mSentAt DateTime? @map("reminder_30m_sent_at") @db.Timestamptz(6)
+  reviewRequestedAt DateTime? @map("review_requested_at") @db.Timestamptz(6)
+  autoCompletedAt   DateTime? @map("auto_completed_at") @db.Timestamptz(6)
+
+  client   Client           @relation(fields: [clientId], references: [id])
+  barber   Barber           @relation(fields: [barberId], references: [id])
+  services BookingService[]
+  review   Review?
+
+  @@index([barberId, startsAt])
+  @@map("bookings")
+}
+
+model BookingService {
+  bookingId   String @map("booking_id") @db.Uuid
+  serviceId   String @map("service_id")
+  name        String
+  durationMin Int    @map("duration_min")
+  price       Int
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id])
+
+  @@id([bookingId, serviceId])
+  @@map("booking_services")
+}
+
+model Review {
+  id        String   @id @default(uuid()) @db.Uuid
+  bookingId String   @unique @map("booking_id") @db.Uuid
+  barberId  String   @map("barber_id")
+  clientId  String   @map("client_id") @db.Uuid
+  rating    Int
+  comment   String?
+  isPublic  Boolean  @default(false) @map("is_public")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  barber  Barber  @relation(fields: [barberId], references: [id])
+  client  Client  @relation(fields: [clientId], references: [id])
+
+  @@map("reviews")
+}
+
+model Setting {
+  key   String @id
+  value String
+
+  @@map("settings")
+}
+
+model AdminUser {
+  id             String  @id @default(uuid()) @db.Uuid
+  login          String  @unique
+  passwordHash   String  @map("password_hash")
+  telegramChatId String? @map("telegram_chat_id")
+
+  @@map("admin_users")
+}

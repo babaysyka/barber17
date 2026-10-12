@@ -1,0 +1,53 @@
+.section {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 100svh;
+  overflow: clip;
+  padding: 7rem 1.25rem 3rem;
+}
+
+.section :global(img) {
+  object-fit: cover;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(11, 11, 10, 0.78), rgba(11, 11, 10, 0.18) 55%);
+  pointer-events: none;
+}
+
+.copy {
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.5rem, 7vw, 6.6rem);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+}
+
+.title span,
+.title em {
+  display: block;
+}
+
+.title em {
+  font-style: italic;
+}
+
+.hours {
+  margin: 1.2rem 0 1.2rem;
+  color: var(--paper);
+}
+
+@media (min-width: 900px) {
+  .section {
+    padding: 8rem 4rem 4.5rem;
+  }
+}

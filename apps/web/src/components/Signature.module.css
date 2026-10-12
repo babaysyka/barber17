@@ -1,0 +1,42 @@
+.host {
+  background: var(--bg);
+}
+
+.section {
+  background: var(--bg);
+}
+
+.frame {
+  position: relative;
+  height: 100svh;
+  overflow: clip;
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  transform-origin: center center;
+}
+
+.media :global(img) {
+  object-fit: cover;
+}
+
+.words {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 12vh 6vw 8vh;
+  background: linear-gradient(to top, rgba(11, 11, 10, 0.62), transparent 58%);
+  pointer-events: none;
+}
+
+.word {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.8rem, 10vw, 7.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+}

@@ -1,0 +1,11 @@
+.note {
+  margin: 0;
+  padding: 2rem 0 1rem;
+  color: var(--muted);
+}
+
+.page {
+  margin: 0;
+  padding: calc(var(--header) + 2rem) 1.25rem 4rem;
+  color: var(--muted);
+}

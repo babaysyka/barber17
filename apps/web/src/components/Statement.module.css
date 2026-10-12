@@ -1,0 +1,30 @@
+.section {
+  padding: 22vh 1.25rem;
+}
+
+.title {
+  margin: 0;
+  max-width: 12ch;
+  color: var(--paper);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.8rem, 7vw, 6.4rem);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+}
+
+.title em {
+  font-style: italic;
+}
+
+.body {
+  max-width: 34rem;
+  margin: 2rem 0 0;
+  color: var(--muted);
+}
+
+@media (min-width: 900px) {
+  .section {
+    padding-inline: 8vw;
+  }
+}

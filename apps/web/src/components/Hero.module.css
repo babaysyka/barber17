@@ -1,0 +1,106 @@
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100svh;
+  overflow: clip;
+  background: var(--bg);
+}
+
+.frame,
+.scrim {
+  position: absolute;
+  inset: 0;
+}
+
+.frame {
+  overflow: clip;
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  transform-origin: center center;
+}
+
+.media :global(img) {
+  object-fit: cover;
+}
+
+.scrim {
+  background: linear-gradient(
+    to top,
+    rgba(11, 11, 10, 0.82) 0%,
+    rgba(11, 11, 10, 0.28) 46%,
+    rgba(11, 11, 10, 0.18) 100%
+  );
+  pointer-events: none;
+}
+
+.copy {
+  position: relative;
+  z-index: 1;
+  padding: 7rem 1.25rem 2.75rem;
+}
+
+.kicker,
+.lead {
+  margin: 0;
+}
+
+.kicker {
+  color: var(--accent);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0.85rem 0 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.55rem, 7.4vw, 7.6rem);
+  font-weight: 400;
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+}
+
+.title em {
+  display: block;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.lead {
+  max-width: 28rem;
+  margin-top: 1.25rem;
+  color: var(--paper);
+  font-size: 1.05rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .scrim {
+    background: linear-gradient(
+      90deg,
+      rgba(11, 11, 10, 0.72) 0%,
+      rgba(11, 11, 10, 0.22) 48%,
+      rgba(11, 11, 10, 0.12) 100%
+    );
+  }
+
+  .copy {
+    padding: 8rem 4rem 4.5rem;
+  }
+
+  .title {
+    font-size: clamp(4.5rem, 7.2vw, 7.8rem);
+  }
+}
