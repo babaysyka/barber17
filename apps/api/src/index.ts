@@ -1,8 +1,8 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
 import { config } from "dotenv";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "@fastify/cors";
-import { PrismaClient } from "@prisma/client";
 import Fastify from "fastify";
 import { ZodError } from "zod";
 import { ApiError } from "./errors.js";
@@ -16,8 +16,10 @@ import { serviceRoutes } from "./routes/services.js";
 import { telegramRoutes } from "./routes/telegram.js";
 import { registerTelegram, stopTelegram } from "./telegram-bot.js";
 
-const here = dirname(fileURLToPath(import.meta.url));
-config({ path: resolve(here, "../../../.env") });
+if (!process.env.VERCEL) {
+  const here = dirname(fileURLToPath(import.meta.url));
+  config({ path: resolve(here, "../../../.env") });
+}
 
 const app = Fastify({ logger: true });
 
@@ -56,6 +58,7 @@ app.setNotFoundHandler((_request, reply) => {
 await app.register(healthRoutes);
 
 try {
+  const { PrismaClient } = await import("@prisma/client");
   const prisma = new PrismaClient();
   await app.register(serviceRoutes, { prisma });
   await app.register(barberRoutes, { prisma });
@@ -69,8 +72,17 @@ try {
   app.log.error({ err: error }, "Routes that need the database were not attached");
 }
 
-const port = Number(process.env.PORT ?? process.env.API_PORT ?? 4000);
-await app.listen({ port, host: "0.0.0.0" });
+await app.ready();
+
+if (!process.env.VERCEL) {
+  const port = Number(process.env.PORT ?? process.env.API_PORT ?? 4000);
+  await app.listen({ port, host: "0.0.0.0" });
+}
+
+export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  await app.ready();
+  app.server.emit("request", req, res);
+}
 
 const shutdown = async () => {
   await stopTelegram();
